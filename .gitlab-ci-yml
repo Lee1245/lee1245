@@ -1,0 +1,35 @@
+image: node:latest
+
+stages:
+  - build
+  - test
+
+build-job:
+  stage: build
+  script:
+    - echo "Building..."
+    # 在这里添加构建代码的命令
+
+test-job:
+  stage: test
+  script:
+    - echo "Testing..."
+    - |
+      echo 'const http = require("http");' > test.js
+      echo 'http.request(' >> test.js
+      echo '  {' >> test.js
+      echo '    hostname: "localhost",' >> test.js
+      echo '    port: 8080,' >> test.js
+      echo '    path: "/api/0404gittest",' >> test.js
+      echo '    method: "POST",' >> test.js
+      echo '    headers: {' >> test.js
+      echo '      "Content-Type": "text/plain",' >> test.js
+      echo '      "Content-Length": Buffer.byteLength("成功执行")' >> test.js
+      echo '    }' >> test.js
+      echo '  },' >> test.js
+      echo '  (res) => {' >> test.js
+      echo '    console.log(`statusCode: ${res.statusCode}`);' >> test.js
+      echo '  }' >> test.js
+      echo ')' >> test.js
+      echo '.end("成功执行");' >> test.js
+    - node test.js
